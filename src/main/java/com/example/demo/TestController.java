@@ -33,7 +33,7 @@ import javax.print.Doc;
 @Log4j2
 public class TestController {
 
-//    private MongoClient mongoClient;
+    //    private MongoClient mongoClient;
     private MongoDatabase mongoDatabase;
     private final MongoCollection<Document> mongoCollection;
 
@@ -46,12 +46,7 @@ public class TestController {
     }
 
     List<Document> fullTextSearch(String searchWord) {
-        return mongoCollection.aggregate(Arrays.asList(new Document("$search",
-                new Document("text",
-                        new Document("query", "figth club")
-                                .append("path", Arrays.asList("title", "plot"))
-                                .append("fuzzy",
-                                        new Document("maxEdits", 1L)))))).into(new ArrayList<Document>());
+        return mongoCollection.aggregate(listBson(searchWord)).into(new ArrayList<Document>());
 
 //        TextCriteria criteria = TextCriteria
 //                .forDefaultLanguage()
@@ -69,13 +64,17 @@ public class TestController {
         return new ResponseEntity<>(fullTextSearch(searchWord), HttpStatus.OK);
     }
 
-    public List<Document> test() {
+    public List<Document> listBson(String search) {
         return Arrays.asList(new Document("$search",
-                new Document("text",
-                        new Document("query", "figth club")
-                                .append("path", Arrays.asList("title", "plot"))
-                                .append("fuzzy",
-                                        new Document("maxEdits", 1L)))));
+                        new Document("text",
+                                new Document("query", search)
+                                        .append("path", Arrays.asList("title", "plot"))
+                                        .append("fuzzy",
+                                                new Document("maxEdits", 1L)))),
+                new Document("$project",
+                        new Document("title", 1L)
+                                .append("plot", 1L)
+                                .append("fullplot", 1L)));
     }
 
 
