@@ -1,8 +1,10 @@
-package com.example.demo;
+package com.example.demo.documents;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.TextScore;
 
 
 @Data
@@ -12,10 +14,8 @@ public class Movies {
     @Id
     private String _id;
     private String plot;
-    private int runtime;
+    //    @TextIndexed(weight = 2)
     private String title;
-    private String fullplot;
-    private String rated;
-    private int year;
-    private String type;
+    //    @TextScore
+    Float score;
 }
